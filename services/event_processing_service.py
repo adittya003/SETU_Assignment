@@ -33,7 +33,7 @@ class EventProcessingService:
             # 2. Check idempotency
             transaction_id = payload["transaction_id"]
             merchant_id = payload["merchant_id"]
-            transaction = TransactionService.get_by_id(transaction_id)
+            transaction = TransactionService.get_by_transaction_id(transaction_id)
 
             if PaymentEventService.exists(payload["event_id"]):
                 raise DuplicateEventException(payload["event_id"])
@@ -43,6 +43,10 @@ class EventProcessingService:
             merchant = MerchantService.get_by_id(merchant_id)
             if not merchant:
                 raise MerchantNotFoundException(merchant_id)
+            
+            if merchant.merchant_name != payload["merchant_name"]:
+                raise InvalidPayloadException("merchant_name does not match the provided merchant_id.")
+            
 
             event_type = payload["event_type"]
             payload_status = EventProcessingService.map_event_to_transaction_status(event_type)
@@ -103,12 +107,13 @@ class EventProcessingService:
                         status=payload_status,
                         reconciliation_status=ReconciliationStatus.DISCREPANCY
                     )
-                
+            db.session.flush()
+
             # 6. Log the event
             PaymentEventService.create_event(
                 event_id = payload["event_id"],
                 transaction_id = transaction.id,
-                event_type = event_type,
+                event_type = EventType(payload["event_type"]),
                 event_timestamp = datetime.fromisoformat(payload["timestamp"])
             )
 

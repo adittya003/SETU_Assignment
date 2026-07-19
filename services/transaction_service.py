@@ -12,6 +12,13 @@ class TransactionService:
         return Transaction.query.filter_by(
             transaction_id=transaction_id
         ).first()
+    
+    @staticmethod
+    def get_all():
+        """
+        Returns all transactions.
+        """
+        return Transaction.query.all()
 
     @staticmethod
     def exists(transaction_id):
