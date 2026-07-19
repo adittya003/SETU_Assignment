@@ -1,0 +1,22 @@
+[
+    {
+        "merchant_id": "merchant_1",
+        "merchant_name": "QuickMart"
+    },
+    {
+        "merchant_id": "merchant_2",
+        "merchant_name": "FreshBasket"
+    },
+    {
+        "merchant_id": "merchant_3",
+        "merchant_name": "UrbanEats"
+    },
+    {
+        "merchant_id": "merchant_4",
+        "merchant_name": "TechBazaar"
+    },
+    {
+        "merchant_id": "merchant_5",
+        "merchant_name": "StyleHub"
+    }
+]
